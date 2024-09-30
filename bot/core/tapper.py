@@ -355,14 +355,15 @@ class Tapper:
                     if tasks and tasks.get("status", 500) == 0:
                         for category, task_group in tasks["data"].items():
                             for task in task_group:
-                                if task.get('enable') and not task.get('invisible', False):
-                                    if task.get('startTime') and task.get('endTime'):
-                                        task_start = convert_to_local_and_unix(task['startTime'])
-                                        task_end = convert_to_local_and_unix(task['endTime'])
-                                        if task_start <= time() <= task_end:
+                                if type(task) == dict:
+                                    if task.get('enable') and not task.get('invisible', False):
+                                        if task.get('startTime') and task.get('endTime'):
+                                            task_start = convert_to_local_and_unix(task['startTime'])
+                                            task_end = convert_to_local_and_unix(task['endTime'])
+                                            if task_start <= time() <= task_end:
+                                                tasks_list.append(task)
+                                        elif task.get('type') not in ['wallet', 'mysterious', 'classmate', 'classmateInvite', 'classmateInviteBack']:
                                             tasks_list.append(task)
-                                    elif task.get('type') not in ['wallet', 'mysterious', 'classmate', 'classmateInvite', 'classmateInviteBack']:
-                                        tasks_list.append(task)
                     
                     for task in tasks_list:
                         wait_second = task.get('waitSecond', 0)
